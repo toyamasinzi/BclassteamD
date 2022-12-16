@@ -12,17 +12,23 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Color _Rcolor = Color.red;
     [SerializeField] Color _Bcolor = Color.blue;
     [SerializeField] Color _Wcolor = Color.white;
-    Vector2 _dir = default;
+    bool _Lrotate = false;
+    bool _Rrotate = false;
+    public Vector2 _dir = default;
+    GameManager _gamemManager;
+    Animator  _anim;
 
     void Start()
     {
+        _gamemManager = GetComponent<GameManager>();
         _rb = GetComponent<Rigidbody>();
+        _anim = GetComponent<Animator>();
     }
 
     
     void Update()
     {
-        //if (_gameStart)
+        //if (_gamemManager._start)
         //{
             float h = Input.GetAxisRaw("Horizontal");
             float v = Input.GetAxisRaw("Vertical");
@@ -41,12 +47,23 @@ public class PlayerController : MonoBehaviour
         _rb.AddForce(_dir.normalized * _moveSpeed);
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
+    void OnCollisionEnter(Collision collision)
     {
        if(collision.gameObject.tag == "enemy")
         {
 
         }
     }
+    void LateUpdate()
+    {
+        if (Input.GetButton("Fire2"))
+        {
+            _anim.SetBool("RotateL",_Lrotate);
 
+        }
+        else if (Input.GetButton("Fire3"))
+        {
+            _anim.SetBool("RotateR",_Rrotate);
+        }
+    }
 }
