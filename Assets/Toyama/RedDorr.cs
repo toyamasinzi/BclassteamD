@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class RedDorr : MonoBehaviour
 {
-    private GameManager _gm = null;
+    [SerializeField] string _animStateName  = "";
+    [SerializeField] Animator _anim;
+    private GameManager _gameManager;
     void Start()
     {
-        
+        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
     void Update()
     {
@@ -15,6 +17,9 @@ public class RedDorr : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-        if()
+        if(_gameManager._red && collision.gameObject.tag == "Attack")
+        {
+            _anim.Play(_animStateName);
+        }
     }
 }
