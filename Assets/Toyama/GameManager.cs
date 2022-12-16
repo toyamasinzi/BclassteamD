@@ -6,8 +6,8 @@ public class GameManager : MonoBehaviour
 {
     public bool _start = false;
 
-    public bool _red = false;
     public bool _white = false;
+    public bool _red = false;
     public bool _blue = false;
 
     void Start()
