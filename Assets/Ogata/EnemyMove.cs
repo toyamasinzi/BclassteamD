@@ -6,6 +6,7 @@ public class EnemyMove : MonoBehaviour
 {
     private GameObject target;
     public float speed;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -16,7 +17,10 @@ public class EnemyMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.LookAt(target.transform);
-        transform.position += transform.forward * speed;
+       if(target.GetComponent<PlayMove>().isArea == true)
+            {
+            transform.LookAt(target.transform);
+            transform.position += transform.forward * speed;
+        }
     }
 }
