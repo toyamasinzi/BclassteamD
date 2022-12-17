@@ -7,7 +7,6 @@ public class PlayerController : MonoBehaviour
     Rigidbody _rb;
     [SerializeField] float _moveSpeed = 10f;
     [SerializeField] int _playerHP = 0;
-    [SerializeField] bool _colorChange = false;
     [SerializeField] bool _gameStart = false;
     [SerializeField] Color _Rcolor = Color.red;
     [SerializeField] Color _Bcolor = Color.blue;
@@ -24,11 +23,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float _timer = 0f;
     [SerializeField] float _interval = 5f;
     [SerializeField] bool _move = true;
+    Material _mat;
     public void Start()
     {
         _gamemManager = GetComponent<GameManager>();
         _rb = GetComponent<Rigidbody>();
         _anim = GetComponent<Animator>();
+        _mat = this.GetComponent<Renderer>().material;
     }
 
     
@@ -62,7 +63,7 @@ public class PlayerController : MonoBehaviour
        _anim.SetBool("Damage", false);
         
     }
-    
+
     public void LateUpdate()
     {
         //左回転
@@ -79,7 +80,7 @@ public class PlayerController : MonoBehaviour
                 _anim.SetBool("RotateL", true);
             }
         }
-　　　　//右回転
+        //右回転
         else if (Input.GetButton("Fire3") && !_leftAttack)
         {
             _timer += Time.deltaTime;
@@ -97,7 +98,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             _timer -= Time.deltaTime;
-            if( _timer <= 0)
+            if (_timer <= 0)
             {
                 _timer = 0;
             }
@@ -107,6 +108,7 @@ public class PlayerController : MonoBehaviour
             _anim.SetBool("RotateR", false);
         }
     }
+
     public void Damage()
     {
         _playerHP += 10;
@@ -122,8 +124,41 @@ public class PlayerController : MonoBehaviour
         _anim.SetBool("CantMove", true);
         _anim.SetBool("RotateL", false);
         _anim.SetBool("RotateR", false);
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(2.0f);
         _anim.SetBool("CantMove", false);
         _timer = 0;
+    }
+
+    public void Red()
+    {
+        //_gamemManager._red = true;
+        //_gamemManager._white = false;
+        //_gamemManager._blue = false;
+        //if (_gamemManager._red)
+        //{
+            _mat.color = _Rcolor;
+        //}
+    }
+
+    public void Blue()
+    {
+        //_gamemManager._red = false;
+        //_gamemManager._white = false;
+        //_gamemManager._blue = true;
+        //if(_gamemManager._blue)
+        //{
+            _mat.color = _Bcolor;
+        //}
+    }
+
+    public void White()
+    {
+        //_gamemManager._red = false;
+        //_gamemManager._white = true;
+        //_gamemManager._blue = false;
+        //if (_gamemManager._white)
+        //{
+            _mat.color = _Wcolor;
+        //}
     }
 }
