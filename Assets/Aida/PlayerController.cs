@@ -17,8 +17,14 @@ public class PlayerController : MonoBehaviour
     public Vector2 _dir = default;
     GameManager _gamemManager;
     Animator  _anim;
-
-    void Start()
+    bool _leftAttack = false;
+    bool _rightAttack = false;
+    bool _damage = false;
+    bool _cant = true;
+    [SerializeField] float _timer = 0f;
+    [SerializeField] float _interval = 5f;
+    [SerializeField] bool _move = true;
+    public void Start()
     {
         _gamemManager = GetComponent<GameManager>();
         _rb = GetComponent<Rigidbody>();
@@ -26,44 +32,98 @@ public class PlayerController : MonoBehaviour
     }
 
     
-    void Update()
+    public void Update()
     {
         //if (_gamemManager._start)
         //{
             float h = Input.GetAxisRaw("Horizontal");
             float v = Input.GetAxisRaw("Vertical");
 
-            _dir = new Vector2(h,v);
+            _dir = new Vector2(h, v);
             _rb.velocity = _dir * _moveSpeed;
-
-            //if(_playerHP >= 100)
-            //{
-            //    //ゲームオーバーを呼び出す
-            //}
         //}
     }
-    void FixedUpdate()
-    {
-        _rb.AddForce(_dir.normalized * _moveSpeed);
+    public void FixedUpdate()
+    {  
+      _rb.AddForce(_dir.normalized * _moveSpeed);
+        
     }
 
-    void OnCollisionEnter(Collision collision)
+    public void OnTriggerEnter(Collider collision)
     {
-       if(collision.gameObject.tag == "enemy")
-        {
-
+        if (collision.gameObject.tag == "Enemy")
+        { 
+            Debug.Log("Hit");
+            Damage();  
         }
     }
-    void LateUpdate()
+    public void OnTriggerExit(Collider collision)
+    { 
+       _anim.SetBool("Damage", false);
+        
+    }
+    
+    public void LateUpdate()
     {
-        if (Input.GetButton("Fire2"))
+        //左回転
+        if (Input.GetButton("Fire2") && !_rightAttack)
         {
-            _anim.SetBool("RotateL",_Lrotate);
+            _timer += Time.deltaTime;
+            if (_timer > _interval)
+            {
+                StartCoroutine(Coroutine());
+            }
+            else
+            {
+                _leftAttack = true;
+                _anim.SetBool("RotateL", true);
+            }
+        }
+　　　　//右回転
+        else if (Input.GetButton("Fire3") && !_leftAttack)
+        {
+            _timer += Time.deltaTime;
+            if (_timer > _interval)
+            {
+                StartCoroutine(Coroutine());
+            }
+            else
+            {
+                _rightAttack = true;
+                _anim.SetBool("RotateR", true);
+            }
+        }
+        //回転していない
+        else
+        {
+            _timer -= Time.deltaTime;
+            if( _timer <= 0)
+            {
+                _timer = 0;
+            }
+            _leftAttack = false;
+            _rightAttack = false;
+            _anim.SetBool("RotateL", false);
+            _anim.SetBool("RotateR", false);
+        }
+    }
+    public void Damage()
+    {
+        _playerHP += 10;
+        if (_playerHP >= 100)
+        {
+            _gamemManager.GameOver();
+        }
+        _anim.SetBool("Damage", true);
+    }
 
-        }
-        else if (Input.GetButton("Fire3"))
-        {
-            _anim.SetBool("RotateR",_Rrotate);
-        }
+    public IEnumerator Coroutine()
+    {
+        _anim.SetBool("CantMove", true);
+        _anim.SetBool("RotateL", false);
+        _anim.SetBool("RotateR", false);
+        yield return new WaitForSeconds(1.0f);
+        _anim.SetBool("CantMove", false);
+        _timer = 0;
     }
 }
