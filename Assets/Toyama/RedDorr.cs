@@ -6,18 +6,11 @@ public class RedDorr : MonoBehaviour
 {
     [SerializeField] string _animStateName  = "";
     [SerializeField] Animator _anim;
-    private GameManager _gameManager;
-    void Start()
+    [SerializeField] GameManager _gameManager;
+
+    private void OnTriggerEnter(Collider other)
     {
-        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-    }
-    void Update()
-    {
-        
-    }
-    private void OnCollisionEnter(Collision collision)
-    {
-        if(_gameManager._red && collision.gameObject.tag == "Attack")
+        if(other.gameObject.tag == "Attack" && _gameManager._red)
         {
             _anim.Play(_animStateName);
         }
