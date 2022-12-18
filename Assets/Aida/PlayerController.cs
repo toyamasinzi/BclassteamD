@@ -6,7 +6,6 @@ public class PlayerController : MonoBehaviour
 {
     Rigidbody _rb;
     [SerializeField] float _moveSpeed = 10f;
-    [SerializeField] int _playerHP = 0;
     [SerializeField] bool _gameStart = false;
     [SerializeField] Color _Rcolor = Color.red;
     [SerializeField] Color _Bcolor = Color.blue;
@@ -24,16 +23,17 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float _interval = 5f;
     [SerializeField] bool _move = true;
     Material _mat;
-    public void Start()
+    HPController _HP;
+    void Start()
     {
-        _gamemManager = GetComponent<GameManager>();
         _rb = GetComponent<Rigidbody>();
         _anim = GetComponent<Animator>();
         _mat = this.GetComponent<Renderer>().material;
+        _HP = this.GetComponent<HPController>();
     }
 
     
-    public void Update()
+    void Update()
     {
         //if (_gamemManager._start)
         //{
@@ -44,24 +44,18 @@ public class PlayerController : MonoBehaviour
             _rb.velocity = _dir * _moveSpeed;
         //}
     }
-    public void FixedUpdate()
-    {  
-      _rb.AddForce(_dir.normalized * _moveSpeed);
-        
-    }
-
     public void OnTriggerEnter(Collider collision)
     {
         if (collision.gameObject.tag == "Enemy")
         { 
             Debug.Log("Hit");
-            Damage();  
+            _anim.SetBool("Damage", true);
+            _HP.Damage();
         }
     }
     public void OnTriggerExit(Collider collision)
     { 
        _anim.SetBool("Damage", false);
-        
     }
 
     public void LateUpdate()
@@ -109,16 +103,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void Damage()
-    {
-        _playerHP += 10;
-        if (_playerHP >= 100)
-        {
-            _gamemManager.GameOver();
-        }
-        _anim.SetBool("Damage", true);
-    }
-
     public IEnumerator Coroutine()
     {
         _anim.SetBool("CantMove", true);
@@ -145,7 +129,7 @@ public class PlayerController : MonoBehaviour
         //_gamemManager._red = false;
         //_gamemManager._white = false;
         //_gamemManager._blue = true;
-        //if(_gamemManager._blue)
+        //if (_gamemManager._blue)
         //{
             _mat.color = _Bcolor;
         //}
