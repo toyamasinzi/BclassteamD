@@ -41,7 +41,6 @@ public class PlayerController : MonoBehaviour
     Animator _anim;
 
     [SerializeField] GameManager _gamemManager;
-    [SerializeField] bool _gameStart = false;
 
     void Start()
     {
@@ -49,6 +48,7 @@ public class PlayerController : MonoBehaviour
         _anim = GetComponent<Animator>();
         _mat = this.GetComponent<Renderer>().material;
         _HP = this.GetComponent<HPController>();
+        _gamemManager._white = true;
     }
     /// <summary>
     /// プレイヤー操作と色を変える処理
@@ -62,28 +62,29 @@ public class PlayerController : MonoBehaviour
 
             _dir = new Vector2(h, v);
             _rb.velocity = _dir * _moveSpeed;
-        }
-        
-        if (Input.GetButtonDown("Fire1"))
-        {
-            Debug.Log("R");
-            if(i == 0)
+
+
+            if (Input.GetButtonDown("Fire1"))
             {
-                i++;
-                Red();
-                Debug.Log(i);
-            }
-            else if(i == 1)
-            {
-                i++;
-                Blue();
-                Debug.Log(i);
-            }
-            else
-            {
-                i = 0;
-                White();
-                Debug.Log(i);
+                Debug.Log("R");
+                if (i == 0)
+                {
+                    i++;
+                    Red();
+                    Debug.Log(i);
+                }
+                else if (i == 1)
+                {
+                    i++;
+                    Blue();
+                    Debug.Log(i);
+                }
+                else
+                {
+                    i = 0;
+                    White();
+                    Debug.Log(i);
+                }
             }
         }
     }
@@ -112,6 +113,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void LateUpdate()
     {
+        if(_gamemManager._start)
         Rotate();
     }
 
