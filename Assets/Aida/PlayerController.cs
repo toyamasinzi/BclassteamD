@@ -94,19 +94,19 @@ public class PlayerController : MonoBehaviour
     public void OnTriggerEnter(Collider collision)
     {
         if (collision.gameObject.tag == "Enemy")
-        { 
+        {
             Debug.Log("Hit");
-            _anim.SetBool("Damage", true);
+            StartCoroutine(DamageCoroutine());
             _HP.Damage();
         }
     }
     /// <summary>
     /// 敵にあたってなければダメージアニメーションしない
     /// </summary>
-    public void OnTriggerExit(Collider collision)
-    { 
-       _anim.SetBool("Damage", false);
-    }
+    //public void OnTriggerExit(Collider collision)
+    //{
+    //   _anim.SetBool("Damage", false);
+    //}
 
     /// <summary>
     /// プレイヤーを回転させる処理
@@ -129,6 +129,14 @@ public class PlayerController : MonoBehaviour
         _anim.SetBool("CantMove", false);
         _timer = 0;
     }
+
+    public IEnumerator DamageCoroutine()
+    {
+        _anim.SetBool("Damage", true);
+        yield return new WaitForSeconds(1.0f);
+        _anim.SetBool("Damage", false);
+    }
+    
 
     /// <summary>
     /// プレイヤーの色が赤になる
