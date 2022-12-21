@@ -4,19 +4,17 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public bool _start = false;
-    public bool _white = false;
-    public bool _red = false;
-    public bool _blue = false;
+    public bool _start = false;//ボタンの処理が呼び出されるとtrue
+    
 
     void Start()
     {
-        
+        GameStart();
     }
-    void Update()
-    {
 
-    }
+    /// <summary>
+    /// ゲームスタート時のボタン入力待ち
+    /// </summary>
     public void GameStart()
     {
         StartCoroutine(Hoge());
@@ -26,8 +24,18 @@ public class GameManager : MonoBehaviour
             _start = true;
         }
     }
+    /// <summary>
+    /// ゲームオーバ時の処理
+    /// </summary>
     public void GameOver()
     {
 
     }
+}
+public enum PlayerState
+{
+    Default = 0,
+    Red = 1,
+    Blue = 2,
+    White = 3,
 }

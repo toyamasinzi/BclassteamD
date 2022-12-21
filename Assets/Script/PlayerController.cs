@@ -11,20 +11,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float _moveSpeed = 10f;
     public Vector2 _dir = default;
     /// <summary>
-    /// プレイヤーの色を変えるための変数
-    /// </summary>
-    [SerializeField] Color _Rcolor = Color.red;
-    [SerializeField] Color _Bcolor = Color.blue;
-    [SerializeField] Color _Wcolor = Color.white;
-
-    /// <summary>
     /// アニメーションさせるかさせないかの判定
     /// </summary>
-    bool _Lrotate = false;
-    bool _Rrotate = false;
     bool _leftAttack = false;
     bool _rightAttack = false;
-    bool _damage = false;
     /// <summary>
     /// 回転時間
     /// </summary>
@@ -41,7 +31,9 @@ public class PlayerController : MonoBehaviour
     Animator _anim;
 
     [SerializeField] GameManager _gamemManager;
-    [SerializeField] bool _gameStart = false;
+    [SerializeField] Material _childMt;
+
+    public static PlayerState _currentState = PlayerState.Default;
 
     void Start()
     {
@@ -49,51 +41,77 @@ public class PlayerController : MonoBehaviour
         _anim = GetComponent<Animator>();
         _mat = this.GetComponent<Renderer>().material;
         _HP = this.GetComponent<HPController>();
+        _childMt = transform.GetChild(0).GetComponent<Renderer>().material;
+
+
     }
-    /// <summary>
-    /// プレイヤー操作と色を変える処理
-    /// </summary>
     void Update()
     {
-        if (_gamemManager._start)
+        if (_gamemManager._start == false)
         {
-            float h = Input.GetAxisRaw("Horizontal");
-            float v = Input.GetAxisRaw("Vertical");
-
-            _dir = new Vector2(h, v);
-            _rb.velocity = _dir * _moveSpeed;
+            return;
         }
-        
-        if (Input.GetButtonDown("Fire1"))
+        float h = Input.GetAxisRaw("Horizontal");
+        float v = Input.GetAxisRaw("Vertical");
+
+        _dir = new Vector2(h, v);
+        _rb.velocity = _dir * _moveSpeed;
+
+        if (Input.GetKeyDown(KeyCode.R))
         {
             Debug.Log("R");
-            if(i == 0)
+            if (i == 0)
             {
                 i++;
-                Red();
+                ChangeState(PlayerState.Red);
                 Debug.Log(i);
             }
-            else if(i == 1)
+            else if (i == 1)
             {
                 i++;
-                Blue();
+                ChangeState(PlayerState.Blue);
                 Debug.Log(i);
             }
             else
             {
                 i = 0;
-                White();
+                ChangeState(PlayerState.White);
                 Debug.Log(i);
             }
         }
+        Rotate();
     }
-    /// <summary>
+
+    void ChangeState(PlayerState nextState)
+    {
+        _currentState = nextState;
+
+        switch (_currentState)
+        {
+            case PlayerState.Default:
+                 _childMt.color = Color.white;
+                break;
+            case PlayerState.Red:
+                _mat.color = Color.red;
+                _childMt.color = Color.red;
+                break;
+            case PlayerState.Blue:
+                _mat.color = Color.blue;
+                _childMt.color = Color.blue;
+                break;
+            case PlayerState.White:
+                _mat.color = Color.white;
+                _childMt.color = Color.white;
+                break;
+        }
+    }
+        /// <summary>
     /// 敵にあたったらダメージアニメーションが始まりHPが減る処理
     /// </summary>
-    public void OnTriggerEnter(Collider collision)
+    private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Enemy")
-        { 
+        {
             Debug.Log("Hit");
             _anim.SetBool("Damage", true);
             _HP.Damage();
@@ -102,17 +120,12 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// 敵にあたってなければダメージアニメーションしない
     /// </summary>
-    public void OnTriggerExit(Collider collision)
-    { 
-       _anim.SetBool("Damage", false);
-    }
-
-    /// <summary>
-    /// プレイヤーを回転させる処理
-    /// </summary>
-    public void LateUpdate()
+    private void OnCollisionExit(Collision collision)
     {
-        Rotate();
+        if(collision.gameObject.tag == "Enemy")
+        {
+            _anim.SetBool("Damage", false);
+        }
     }
 
     /// <summary>
@@ -129,54 +142,12 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// プレイヤーの色が赤になる
-    /// </summary>
-    public void Red()
-    {
-        _gamemManager._red = true;
-        _gamemManager._white = false;
-        _gamemManager._blue = false;
-        if (_gamemManager._red)
-        {
-            _mat.color = _Rcolor;
-        }
-    }
-
-    /// <summary>
-    /// プレイヤーの色が青になる
-    /// </summary>
-    public void Blue()
-    {
-        _gamemManager._red = false;
-        _gamemManager._white = false;
-        _gamemManager._blue = true;
-        if (_gamemManager._blue)
-        {
-            _mat.color = _Bcolor;
-        }
-    }
-
-    /// <summary>
-    /// プレイヤーの色が白になる
-    /// </summary>
-    public void White()
-    {
-        _gamemManager._red = false;
-        _gamemManager._white = true;
-        _gamemManager._blue = false;
-        if (_gamemManager._white)
-        {
-            _mat.color = _Wcolor;
-        }
-    }
-
-    /// <summary>
     /// 回転アニメーション
     /// </summary>
     public void Rotate()
     {
         //左回転
-        if (Input.GetButton("Fire2") && !_rightAttack)
+        if (Input.GetButton("Fire1") && !_rightAttack)
         {
             _timer += Time.deltaTime;
             if (_timer > _interval)
@@ -190,7 +161,7 @@ public class PlayerController : MonoBehaviour
             }
         }
         //右回転
-        else if (Input.GetButton("Fire3") && !_leftAttack)
+        else if (Input.GetButton("Fire2") && !_leftAttack)
         {
             _timer += Time.deltaTime;
             if (_timer > _interval)

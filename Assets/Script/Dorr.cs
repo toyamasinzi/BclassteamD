@@ -2,15 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RedDorr : MonoBehaviour
+public class Dorr : MonoBehaviour
 {
     [SerializeField] string _animStateName  = "";
     [SerializeField] Animator _anim;
-    [SerializeField] GameManager _gameManager;
+    [SerializeField] PlayerState _state = PlayerState.Default;
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.tag == "Attack" && _gameManager._red)
+        if(other.gameObject.tag == "Attack" && PlayerController._currentState == _state)
         {
             _anim.Play(_animStateName);
         }
