@@ -61,3 +61,9 @@ crashlytics-build.properties
 .vsconfig
 UserSettings/EditorUserSettings.asset
 UserSettings/
+Assets/Aida/Enemy.cs
+Assets/Aida/Enemy.cs.meta
+Assets/Aida/PlayerCollision.cs
+Assets/Aida/PlayerCollision.cs.meta
+Assets/Aida/RandomGenerate.cs
+Assets/Aida/RandomGenerate.cs.meta
