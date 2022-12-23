@@ -112,6 +112,7 @@ GameObject:
   - component: {fileID: 1118635563158131948}
   - component: {fileID: 1118635563158131947}
   - component: {fileID: 1118635563158131946}
+  - component: {fileID: 8222239738914543199}
   - component: {fileID: 4891323998010175134}
   m_Layer: 0
   m_Name: Player
@@ -214,13 +215,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _moveSpeed: 5
   _dir: {x: 0, y: 0}
-  _Rcolor: {r: 1, g: 0, b: 0, a: 1}
-  _Bcolor: {r: 0, g: 0, b: 1, a: 1}
-  _Wcolor: {r: 1, g: 1, b: 1, a: 1}
   _timer: 0
   _interval: 5
   _gamemManager: {fileID: 0}
-  _gameStart: 0
+  _childMt: {fileID: 0}
 --- !u!54 &1118635563158131947
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -257,6 +255,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &8222239738914543199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1118635563158131949}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a09dac6d87fc3974d978c01fe0272571, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _scene: 
 --- !u!114 &4891323998010175134
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,15 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public bool _start = false;//ƒ{ƒ^ƒ“‚Ìˆ—‚ªŒÄ‚Ño‚³‚ê‚é‚Ætrue
-    
+    [SerializeField] GameObject _taitl;
+    [SerializeField] GameObject _gameOver;
+    [SerializeField] GameObject _push;
+    [SerializeField] string _scene;
+
+    bool _check = false;
 
     void Start()
     {
         GameStart();
+    }
+    private void Update()
+    {
+
+        if (Input.GetKeyDown(KeyCode.C) && _check)
+        {
+            SceneManager.LoadScene(_scene);
+        }
     }
 
     /// <summary>
@@ -21,6 +35,7 @@ public class GameManager : MonoBehaviour
         IEnumerator Hoge()
         {
             yield return new WaitUntil(() => Input.GetButtonDown("Jump"));
+            _taitl.SetActive(false);
             _start = true;
         }
     }
@@ -29,7 +44,10 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void GameOver()
     {
-
+        _gameOver.SetActive(true);
+        _push.SetActive(true);
+        _start = false;
+        _check = true;
     }
 }
 public enum PlayerState

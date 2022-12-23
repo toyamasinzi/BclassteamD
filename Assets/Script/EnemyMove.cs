@@ -8,6 +8,7 @@ public class EnemyMove : MonoBehaviour
     [SerializeField] float _speed = 1f;
     private Rigidbody _rb = default;
     [SerializeField] float _dis = 1;
+    [SerializeField] GameManager _gm;
 
     private void Start()
     {
@@ -15,6 +16,10 @@ public class EnemyMove : MonoBehaviour
     }
     void Update()
     {
+        if (_gm._start == false)
+        {
+            return;
+        }
         Debug.DrawLine(transform.position, _player.transform.position);
         if(Vector3.Distance(transform.position, _player.transform.position) < _dis)
         {
