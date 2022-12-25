@@ -9,6 +9,8 @@ public class EnemyMove : MonoBehaviour
     private Rigidbody _rb = default;
     [SerializeField] float _dis = 1;
     [SerializeField] GameManager _gm;
+    [SerializeField] HPController _hp;
+    [SerializeField] float _damege = 10f;
 
     private void Start()
     {
@@ -29,6 +31,14 @@ public class EnemyMove : MonoBehaviour
         else
         {
             _rb.velocity = Vector3.zero;
+        }
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.tag == "Player")
+        {
+            _hp.Damage(_damege);
+            gameObject.SetActive(false);
         }
     }
 }

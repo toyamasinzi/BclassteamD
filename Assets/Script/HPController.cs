@@ -5,17 +5,18 @@ using UnityEngine.UI;
 
 public class HPController : MonoBehaviour
 {
-    [SerializeField] int _playerHP = 0;
+    [SerializeField] float _playerHP = 0;
+   
     [SerializeField] GameManager _gameManager;
     [SerializeField] Text _Scoretext = default;
 
     void Update()
     {
-        _Scoretext.text = _playerHP.ToString("d2") + "%";
+        _Scoretext.text = _playerHP.ToString("00") + "%";
     }
-    public void Damage()
+    public void Damage(float i)
     {
-        _playerHP += 10;
+        _playerHP += i;
         if (_playerHP >= 100)
         {
             _gameManager.GameOver();

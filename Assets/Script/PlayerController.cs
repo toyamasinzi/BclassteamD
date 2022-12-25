@@ -27,20 +27,21 @@ public class PlayerController : MonoBehaviour
     /// ゲットコンポーネントする変数
     /// </summary>
     Material _mat;
-    HPController _HP;
     Animator _anim;
 
     [SerializeField] GameManager _gamemManager;
     [SerializeField] Material _childMt;
 
     public static PlayerState _currentState = PlayerState.Default;
+    [SerializeField] AudioClip _se;
+    private AudioSource _ad;
 
     void Start()
     {
+        _ad = GetComponent<AudioSource>();
         _rb = GetComponent<Rigidbody>();
         _anim = GetComponent<Animator>();
         _mat = this.GetComponent<Renderer>().material;
-        _HP = this.GetComponent<HPController>();
         _childMt = transform.GetChild(0).GetComponent<Renderer>().material;
 
 
@@ -55,7 +56,7 @@ public class PlayerController : MonoBehaviour
         float v = Input.GetAxisRaw("Vertical");
 
         _dir = new Vector2(h, v);
-        _rb.velocity = _dir * _moveSpeed;
+        _rb.velocity = _dir.normalized * _moveSpeed;
 
         if (Input.GetKeyDown(KeyCode.R))
         {
@@ -89,7 +90,7 @@ public class PlayerController : MonoBehaviour
         switch (_currentState)
         {
             case PlayerState.Default:
-                 _childMt.color = Color.white;
+                _childMt.color = Color.white;
                 break;
             case PlayerState.Red:
                 _mat.color = Color.red;
@@ -105,29 +106,16 @@ public class PlayerController : MonoBehaviour
                 break;
         }
     }
-        /// <summary>
+    /// <summary>
     /// 敵にあたったらダメージアニメーションが始まりHPが減る処理
     /// </summary>
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Enemy")
         {
-            Debug.Log("Hit");
-            _anim.SetBool("Damage", true);
-            _HP.Damage();
+            _ad.PlayOneShot(_se);
         }
     }
-    /// <summary>
-    /// 敵にあたってなければダメージアニメーションしない
-    /// </summary>
-    private void OnCollisionExit(Collision collision)
-    {
-        if(collision.gameObject.tag == "Enemy")
-        {
-            _anim.SetBool("Damage", false);
-        }
-    }
-
     /// <summary>
     /// 一定時間たつとプレイヤーが動けなくなる
     /// </summary>

@@ -114,8 +114,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _player: {fileID: 0}
   _speed: 5
-  _dis: 8
+  _dis: 11
   _gm: {fileID: 0}
+  _hp: {fileID: 0}
+  _damege: 15
 --- !u!54 &605010478519637508
 Rigidbody:
   m_ObjectHideFlags: 0
